@@ -1,8 +1,9 @@
 import * as THREE from "three";
 import OrbitControls from "orbit-controls-es6";
 import { AudioListener, Audio, AudioLoader, AudioAnalyser } from "three";
+import ParticleSystem from "./ParticleSystem.class";
 
-const AUDIO_RESOLUTION = 32;
+const AUDIO_RESOLUTION = 128;
 
 class ThreeScene {
   constructor() {
@@ -11,9 +12,10 @@ class ThreeScene {
     this.renderer;
     this.controls;
     this.audioAnalyser;
+    this.particleSystem;
     window.addEventListener("resize", () => this.resizeCanvas);
     this.init();
-    this.setupAudio('slobber.mp3', 32);
+    this.setupAudio('Overworld.wav', AUDIO_RESOLUTION * 2);
   }
 
   init() {
@@ -24,22 +26,18 @@ class ThreeScene {
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set(0, 0, -12);
+    this.camera.position.set(0, 1, -1);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enabled = true;
     this.controls.maxDistance = 1500;
     this.controls.minDistance = 0;
 
-    let geometry = new THREE.PlaneGeometry(10, 1, AUDIO_RESOLUTION, 1);
-    let material = new THREE.MeshBasicMaterial({color: 0xffff00, side: THREE.DoubleSide, wireframe: true});
-    let plane = new THREE.Mesh(geometry, material);
-    plane.rotation.x = Math.PI / 2;
-    plane.position.y = -5;
-    this.scene.add(plane)
+    this.particleSystem = new ParticleSystem(AUDIO_RESOLUTION, AUDIO_RESOLUTION);
+    this.scene.add(this.particleSystem.points);
 
-    let light = new THREE.AmbientLight();
-    let pointLight = new THREE.PointLight();
-    pointLight.position.set(10, 10, 0);
+    let light = new THREE.AmbientLight(0xff3377, 0.1);
+    let pointLight = new THREE.SpotLight(0x5555ff, 1, 1000, Math.PI / 6);
+    pointLight.position.set(3, 1, 1.5);
     this.scene.add(light, pointLight);
   }
 
@@ -60,7 +58,7 @@ class ThreeScene {
   update() {
     this.renderer.render(this.scene, this.camera);
     if (this.audioAnalyser) {
-      console.log(this.audioAnalyser.getFrequencyData());
+      this.particleSystem.update(this.audioAnalyser.getFrequencyData());
     }
   }
 
