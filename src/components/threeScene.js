@@ -2,8 +2,9 @@ import * as THREE from "three";
 import OrbitControls from "orbit-controls-es6";
 import { AudioListener, Audio, AudioLoader, AudioAnalyser } from "three";
 import ParticleSystem from "./ParticleSystem.class";
+import Plane from "./Plane.class";
 
-const AUDIO_RESOLUTION = 128;
+const AUDIO_RESOLUTION = 32;
 
 class ThreeScene {
   constructor() {
@@ -15,7 +16,7 @@ class ThreeScene {
     this.particleSystem;
     window.addEventListener("resize", () => this.resizeCanvas);
     this.init();
-    this.setupAudio('Overworld.wav', AUDIO_RESOLUTION * 2);
+    this.setupAudio('BadRequest.wav', AUDIO_RESOLUTION * 2);
   }
 
   init() {
@@ -26,19 +27,22 @@ class ThreeScene {
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set(0, 1, -1);
+    this.camera.position.set(0, 0.5, -1);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enabled = true;
     this.controls.maxDistance = 1500;
     this.controls.minDistance = 0;
 
-    this.particleSystem = new ParticleSystem(AUDIO_RESOLUTION, AUDIO_RESOLUTION);
-    this.scene.add(this.particleSystem.points);
+    // this.particleSystem = new ParticleSystem(AUDIO_RESOLUTION, AUDIO_RESOLUTION);
+    this.particleSystem = new Plane(AUDIO_RESOLUTION, AUDIO_RESOLUTION);
+    this.scene.add(this.particleSystem.mesh);
 
-    let light = new THREE.AmbientLight(0xff3377, 0.1);
+    let light = new THREE.AmbientLight(0xffffff, 0.1);
     let pointLight = new THREE.SpotLight(0x5555ff, 1, 1000, Math.PI / 6);
+    let secondPointLight = new THREE.SpotLight(0xff555555, 0.5, 1000, Math.PI / 6);
     pointLight.position.set(3, 1, 1.5);
-    this.scene.add(light, pointLight);
+    secondPointLight.position.set(0, 2, -3);
+    this.scene.add(light, pointLight, secondPointLight);
   }
 
   setupAudio(fileName, resolution) {
