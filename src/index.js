@@ -1,7 +1,9 @@
 import './sass/index.scss';
-import ThreeScene from './components/threeScene'
+import ThreeScene from './components/ThreeScene'
+import Cube from './components/Cube.class';
 
-const threeScene = new ThreeScene();
+const cube = new Cube();
+const threeScene = new ThreeScene([cube]);
 
 function raf() {
     requestAnimationFrame(raf)
