@@ -22,7 +22,7 @@ export default class ThreeScene {
     document.body.appendChild(this.renderer.domElement);
 
     this.scene = new THREE.Scene();
-    this.objects.forEach(obj => obj.addToScene(this.scene))
+    this.objects.forEach(obj => this.scene.add(obj.object3d))
   }
 
   setupCamera() {
