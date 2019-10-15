@@ -6,14 +6,19 @@ export default class BaseObject3d {
         this.children.forEach(child => {
             this.object3d.add(child)
         });
+        this.controllers.forEach(controller => {
+            if (typeof controller == 'object') {
+                controller.onMount(this.object3d)
+            }
+        });
     }
 
-    update() {
+    update(time) {
         this.controllers.forEach(controller => {
             if (typeof controller == 'function') {
-                controller(this.object3d)
+                controller(this.object3d, time)
             } else {
-                controller.update(this.object3d)
+                controller.update(this.object3d, time)
             }
         });
         this.children.forEach(child => {

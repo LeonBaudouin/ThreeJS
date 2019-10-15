@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import OrbitControls from "orbit-controls-es6";
+import { Raycaster } from "./Events/Raycaster.class";
 
 export default class ThreeScene {
 
@@ -7,7 +8,8 @@ export default class ThreeScene {
     this.camera;
     this.scene;
     this.renderer;
-    this.objects = objects
+    this.raycaster = Raycaster.getInstance();
+    this.objects = objects;
     this.controls;
     this.time = 0;
   
@@ -41,8 +43,9 @@ export default class ThreeScene {
   }
 
   update() {
-    this.renderer.render(this.scene, this.camera);
+    this.raycaster.update(this.camera);;
     this.objects.forEach(obj => obj.update(this.time))
+    this.renderer.render(this.scene, this.camera);
     this.time++;
   }
 
