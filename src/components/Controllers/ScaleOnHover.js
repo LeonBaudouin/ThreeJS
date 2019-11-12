@@ -3,7 +3,7 @@ import { Raycaster } from "../Events/Raycaster.class";
 
 export default class ScaleOnHover extends AbstractController {
 
-    constructor({duration, startScale, endScale, easeInFunc, easeOutFunc}) {
+    constructor({duration, startScale, endScale, easeInFunc, easeOutFunc, objectToWatch}) {
         super();
         this.duration = duration;
         this.startScale = startScale; 
@@ -11,6 +11,9 @@ export default class ScaleOnHover extends AbstractController {
         this.easeInFunc = easeInFunc; 
         this.easeOutFunc = easeOutFunc;
         this.raycaster = Raycaster.getInstance();
+        this.raycaster.addObjectToWatch(objectToWatch, intersect => {
+            this.isHovered = intersect
+        });
         this.isHovered = false;
         this.currentTime = 0;
         // 0: idle, 1: hovered and still, 2: scale up, 3: scale down
@@ -18,9 +21,6 @@ export default class ScaleOnHover extends AbstractController {
     }
 
     onMount(object3d) {
-        this.raycaster.addObjectToWatch(object3d, intersect => {
-            this.isHovered = intersect
-        });
     }
 
     update(object3d) {

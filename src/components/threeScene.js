@@ -29,7 +29,7 @@ export default class ThreeScene {
 
   setupCamera() {
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set(0, 0, 5);
+    this.camera.position.set(0, 3, 5);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enabled = true;
@@ -43,7 +43,7 @@ export default class ThreeScene {
   }
 
   update() {
-    this.raycaster.update(this.camera);;
+    this.raycaster.update(this.camera);
     this.objects.forEach(obj => obj.update(this.time))
     this.renderer.render(this.scene, this.camera);
     this.time++;
