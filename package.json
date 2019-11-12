@@ -17,6 +17,7 @@
     "orbit-controls-es6": "^2.0.0",
     "raw-loader": "^2.0.0",
     "sass-loader": "^7.1.0",
+    "simplex-noise": "^2.4.0",
     "style-loader": "^0.23.1",
     "three": "^0.104.0",
     "webpack": "^4.31.0"

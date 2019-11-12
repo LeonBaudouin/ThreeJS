@@ -4,81 +4,36 @@ import BaseObject3d from './components/Abstract/BaseObject3d.class';
 import ThreeScene from './components/ThreeScene';
 import ScaleOnHover from './components/Controllers/ScaleOnHover';
 import Easing from './components/Math/Easing';
+import SimplexNoise from 'simplex-noise';
+
+const simplex = new SimplexNoise(Math.random);
+
+let cubes = [];
+for (let x = 0; x < 10; x++) {
+    for (let y = 0; y < 10; y++) {
+        for (let z = 0; z < 10; z++) {
+            cubes.push(generateCube(5 - x,  5 - y, 5 - z))
+        }
+    }
+}
 
 const objects = [
+    ...cubes,
     new BaseObject3d(
-        () => {
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.MeshLambertMaterial({color: 0x00ff00});
-            const mesh = new THREE.Mesh(geometry, material);
-            return mesh;
-        },
-        [
-            (object3d, time) => {
-                object3d.rotateX(0.001);
-                object3d.rotateY(0.005);
-            },
-            new ScaleOnHover({
-                duration: 30,
-                startScale: 1,
-                endScale: 1.1,
-                easeInFunc: Easing.easeInOutCubic,
-                easeOutFunc: Easing.easeInOutCubic
-            })
-        ]
+        () => new THREE.AmbientLight(0xffffff, 0.8),
     ),
     new BaseObject3d(
         () => {
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.MeshLambertMaterial({color: 0xff0000});
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.x = -3;
-            return mesh;
-        },
-        [
-            (object3d, time) => {
-                object3d.rotateX(0.001);
-                object3d.rotateY(0.005);
-            },
-            new ScaleOnHover({
-                duration: 30,
-                startScale: 1,
-                endScale: 1.1,
-                easeInFunc: Easing.easeInOutCubic,
-                easeOutFunc: Easing.easeInOutCubic
-            })
-        ]
+            const light = new THREE.PointLight(0xff0000);
+            light.position.set(-40, 50, 20);
+            return light;
+        }
     ),
     new BaseObject3d(
         () => {
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.MeshLambertMaterial({color: 0x0000ff});
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.x = 3;
-            return mesh;
-        },
-        [
-            (object3d, time) => {
-                object3d.rotateX(0.001);
-                object3d.rotateY(0.005);
-            },
-            new ScaleOnHover({
-                duration: 30,
-                startScale: 1,
-                endScale: 1.1,
-                easeInFunc: Easing.easeInOutCubic,
-                easeOutFunc: Easing.easeInOutCubic
-            })
-        ]
-    ),
-    new BaseObject3d(
-        () => new THREE.AmbientLight(0x404040),
-    ),
-    new BaseObject3d(
-        () => {
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-            directionalLight.position.set(-4, 5, -2);
-            return directionalLight;
+            const light = new THREE.PointLight(0x0000ff, 0.2);
+            light.position.set(30, 10, -50);
+            return light;
         }
     )
 ]
@@ -91,3 +46,20 @@ function raf() {
 }
 
 raf()
+
+function generateCube(x, y, z) {
+    return new BaseObject3d(
+        () => {
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshBasicMaterial({color: 0xffffff,transparent: true})
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(x, y, z);
+            return mesh;
+        },
+        [
+            (object3d, time) => {
+                object3d.material.opacity = simplex.noise4D(x / 10, y / 10, z / 10, time / 300);
+            }
+        ]
+    )
+}

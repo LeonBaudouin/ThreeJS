@@ -24,6 +24,7 @@ export default class ThreeScene {
     document.body.appendChild(this.renderer.domElement);
 
     this.scene = new THREE.Scene();
+    // this.scene.background = new THREE.Color(0xffeeff);
     this.objects.forEach(obj => this.scene.add(obj.object3d))
   }
 
