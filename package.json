@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "css-loader": "^2.1.1",
+    "dat.gui": "^0.7.6",
     "glslify-loader": "^2.0.0",
     "image-webpack-loader": "^4.6.0",
     "node-sass": "^4.12.0",
